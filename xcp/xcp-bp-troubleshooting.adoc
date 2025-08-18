@@ -1,0 +1,60 @@
+---
+sidebar: sidebar 
+permalink: xcp/xcp-bp-troubleshooting.html 
+keywords: troubleshooting, problems, error 70, 
+summary: Esta sección proporciona orientación para la resolución de problemas de migración de datos mediante NetApp XCP. 
+---
+= Solución de problemas
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Esta sección proporciona orientación para la resolución de problemas de migración de datos mediante NetApp XCP.
+
+
+
+== Error 1: XCP falló con el error nfs3 70: error en el identificador de archivo obsoleto en xcp.log
+
+*Razón y orientación.*
+
+Monte la carpeta de origen y verifique que la carpeta exista.  Si no existe o ha sido eliminado, recibirás un `stale filehandle` error, en cuyo caso puedes ignorar el error.
+
+
+
+== Error 2: el volumen de destino NFS de NetApp tiene espacio, pero XCP falló con el error nfs3 28: no queda espacio en el dispositivo
+
+*Razón y orientación.*
+
+. Verifique el espacio del volumen de destino NFS ejecutando el comando `df` Comando o verificar el almacenamiento.
++
+....
+root@workr-140: USER3# df -h /xcpdest
+Filesystem                 Size  Used Avail Use% Mounted on
+10.63.150.127:/xcpsrc_vol  4.3T  1.7T  2.6T  40% /xcpsrc_vol
+....
+. Verifique los inodos en el controlador de almacenamiento.
++
+....
+A800-Node1-2::> volume show -volume xcpdest -fields files,files-used
+vserver        volume  files    files-used
+-------------- ------- -------- ----------
+A800-Node1_vs1 xcpdest 21251126 21251126
+A800-Node1-2::>
+....
+. Si se utiliza un inodo, aumente la cantidad de inodos ejecutando el siguiente comando:
++
+....
+A800-Node1-2::> volume modify -volume xcpdest -vserver A800-Node1_vs1 -files 40000000
+Volume modify successful on volume xcpdest of Vserver A800-Node1_vs1.
+A800-Node1-2::> volume show -volume xcpdest -fields files,files-used
+vserver        volume  files    files-used
+-------------- ------- -------- ----------
+A800-Node1_vs1 xcpdest 39999990 21251126
+A800-Node1-2::>
+....
+

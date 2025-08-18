@@ -1,0 +1,89 @@
+= 
+:allow-uri-read: 
+
+
+Esta sección describe los pasos necesarios para configurar los parámetros en AWX/Ansible Tower que preparan el entorno para consumir soluciones automatizadas de NetApp .
+
+. Configurar el inventario.
++
+.. Vaya a Recursos → Inventarios → Agregar y haga clic en Agregar inventario.
+.. Proporcione el nombre y los detalles de la organización y haga clic en Guardar.
+.. En la página Inventarios, haga clic en los recursos de inventario que acaba de crear.
+.. Si hay variables de inventario, péguelas en el campo de variables.
+.. Vaya al submenú Grupos y haga clic en Agregar.
+.. Proporcione el nombre del grupo, copie las variables del grupo (si es necesario) y haga clic en Guardar.
+.. Haga clic en el grupo creado, vaya al submenú Hosts y haga clic en Agregar nuevo host.
+.. Proporcione el nombre de host y la dirección IP del host, pegue las variables del host (si es necesario) y haga clic en Guardar.
+
+
+. Crear tipos de credenciales.  Para soluciones que involucren ONTAP, Element, VMware o cualquier otra conexión de transporte basada en HTTPS, debe configurar el tipo de credencial para que coincida con las entradas de nombre de usuario y contraseña.
++
+.. Vaya a Administración → Tipos de credenciales y haga clic en Agregar.
+.. Proporcione el nombre y la descripción.
+.. Pegue el siguiente contenido en la configuración de entrada:
+
+
+
+
+[listing]
+----
+fields:
+- id: username
+type: string
+label: Username
+- id: password
+type: string
+label: Password
+secret: true
+- id: vsadmin_password
+type: string
+label: vsadmin_password
+secret: true
+----
+. Pegue el siguiente contenido en la configuración del inyector:
+
+
+[listing]
+----
+extra_vars:
+password: '{{ password }}'
+username: '{{ username }}'
+vsadmin_password: '{{ vsadmin_password }}'
+----
+. Configurar credenciales.
++
+.. Vaya a Recursos → Credenciales y haga clic en Agregar.
+.. Introduzca el nombre y los detalles de la organización.
+.. Seleccione el tipo de credencial correcto; si desea utilizar el inicio de sesión SSH estándar, seleccione el tipo Máquina o, alternativamente, seleccione el tipo de credencial personalizada que creó.
+.. Introduzca los demás datos correspondientes y haga clic en Guardar.
+
+
+. Configurar el proyecto.
++
+.. Vaya a Recursos → Proyectos y haga clic en Agregar.
+.. Introduzca el nombre y los detalles de la organización.
+.. Seleccione Git para el tipo de credencial de control de origen.
+.. Pegue la URL de control de origen (o URL de clonación de git) correspondiente a la solución específica.
+.. Opcionalmente, si la URL de Git tiene acceso controlado, cree y adjunte la credencial correspondiente en Credencial de control de origen.
+.. Haga clic en Guardar.
+
+
+. Configurar la plantilla de trabajo.
++
+.. Vaya a Recursos → Plantillas → Agregar y haga clic en Agregar plantilla de trabajo.
+.. Introduzca el nombre y la descripción.
+.. Seleccione el tipo de trabajo; Ejecutar configura el sistema basándose en un libro de estrategias y Verificar realiza una ejecución en seco del libro de estrategias sin configurar realmente el sistema.
+.. Seleccione el inventario, el proyecto y las credenciales correspondientes para el libro de estrategias.
+.. Seleccione el libro de jugadas que desea ejecutar como parte de la plantilla de trabajo.
+.. Generalmente las variables se pegan durante el tiempo de ejecución.  Por lo tanto, para obtener el aviso para rellenar las variables durante el tiempo de ejecución, asegúrese de marcar la casilla de verificación Preguntar al iniciar correspondiente al campo Variable.
+.. Proporcione cualquier otro detalle según sea necesario y haga clic en Guardar.
+
+
+. Iniciar la plantilla de trabajo.
++
+.. Vaya a Recursos → Plantillas.
+.. Haga clic en la plantilla deseada y luego haga clic en Iniciar.
+.. Complete cualquier variable si se le solicita durante el inicio y luego haga clic en Iniciar nuevamente.
+
+
+

@@ -1,0 +1,135 @@
+---
+sidebar: sidebar 
+permalink: cyber-vault/ontap-cyber-vault-ps-creation.html 
+keywords: Cyber vault, powershell, script, configuration, validation, hardening 
+summary: Esta es la solución NetApp ONTAP para configurar, reforzar y validar una bóveda cibernética basada en ONTAP 
+---
+= Creación de una bóveda cibernética de ONTAP con PowerShell
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Las copias de seguridad con espacio de aire que utilizan métodos tradicionales implican la creación de espacio y la separación física de los medios primarios y secundarios.  Al trasladar los medios fuera del sitio y/o cortar la conectividad, los actores maliciosos no tienen acceso a los datos.  Esto protege los datos pero puede generar tiempos de recuperación más lentos.  Con SnapLock Compliance, no se requiere separación física.  SnapLock Compliance protege las copias de instantáneas almacenadas en un punto específico del tiempo y de solo lectura, lo que da como resultado datos a los que se puede acceder rápidamente, que son seguros contra eliminación o indelebles, y seguros contra modificación o inmutables.
+
+
+
+== Prerrequisitos
+
+Antes de comenzar con los pasos de la siguiente sección de este documento, asegúrese de que se cumplan los siguientes requisitos previos:
+
+* El clúster de origen debe ejecutar ONTAP 9 o posterior.
+* Los agregados de origen y destino deben ser de 64 bits.
+* Los clústeres de origen y destino deben estar emparejados.
+* Las SVM de origen y destino deben estar emparejadas.
+* Asegúrese de que el cifrado de intercambio de clústeres esté habilitado.
+
+
+La configuración de transferencias de datos a una bóveda cibernética de ONTAP requiere varios pasos.  En el volumen principal, configure una política de instantáneas que especifique qué copias crear y cuándo crearlas mediante programaciones apropiadas y asigne etiquetas para especificar qué copias debe transferir SnapVault.  En el secundario, se debe crear una política SnapMirror que especifique las etiquetas de las copias Snapshot que se transferirán y cuántas de estas copias se deben conservar en la bóveda cibernética.  Después de configurar estas políticas, cree la relación SnapVault y establezca un programa de transferencia.
+
+
+NOTE: Este documento asume que el almacenamiento principal y la bóveda cibernética ONTAP designada ya están instalados y configurados.
+
+
+NOTE: El clúster de bóveda cibernética puede estar en el mismo centro de datos que los datos de origen o en uno diferente.
+
+
+
+== Pasos para crear una bóveda cibernética ONTAP
+
+. Utilice la CLI de ONTAP o el Administrador del sistema para inicializar el reloj de cumplimiento.
+. Cree un volumen de protección de datos con la compatibilidad con SnapLock habilitada.
+. Utilice el comando de creación de SnapMirror para crear relaciones de protección de datos de SnapVault .
+. Establezca el período de retención de SnapLock Compliance predeterminado para el volumen de destino.
+
+
+
+NOTE: La retención predeterminada es "Establecer al mínimo".  A un volumen SnapLock que es un destino de bóveda se le asigna un período de retención predeterminado.  El valor para este período se establece inicialmente en un mínimo de 0 años y un máximo de 100 años (a partir de ONTAP 9.10.1.  Para versiones anteriores de ONTAP , el valor es 0 - 70) para volúmenes de SnapLock Compliance .  Cada copia de NetApp Snapshot se confirma con este período de retención predeterminado al principio.  El período de retención puede extenderse posteriormente, si es necesario, pero nunca acortarse. Para obtener más información, consulte link:https://docs.netapp.com/us-en/ontap/snaplock/set-retention-period-task.html["Descripción general del tiempo de retención establecido"^] .
+
+Lo anterior abarca los pasos manuales.  Los expertos en seguridad aconsejan automatizar el proceso para evitar la gestión manual que introduce un gran margen de error.  A continuación se muestra el fragmento de código que automatiza completamente los requisitos previos y la configuración del cumplimiento de SnapLock y la inicialización del reloj.
+
+Aquí hay un ejemplo de código de PowerShell para inicializar el reloj de cumplimiento de ONTAP .
+
+[source, powershell]
+----
+function initializeSnapLockComplianceClock {
+    try {
+        $nodes = Get-NcNode
+
+        $isInitialized = $false
+        logMessage -message "Cheking if snaplock compliance clock is initialized"
+        foreach($node in $nodes) {
+            $check = Get-NcSnaplockComplianceClock -Node $node.Node
+            if ($check.SnaplockComplianceClockSpecified -eq "True") {
+                $isInitialized = $true
+            }
+        }
+
+        if ($isInitialized) {
+            logMessage -message "SnapLock Compliance clock already initialized" -type "SUCCESS"
+        } else {
+            logMessage -message "Initializing SnapLock compliance clock"
+            foreach($node in $nodes) {
+                Set-NcSnaplockComplianceClock -Node $node.Node
+            }
+            logMessage -message "Successfully initialized SnapLock Compliance clock" -type "SUCCESS"
+        }
+    } catch {
+        handleError -errorMessage $_.Exception.Message
+    }
+}
+
+----
+A continuación se muestra un ejemplo de código de PowerShell para configurar una bóveda cibernética ONTAP .
+
+[source, powershell]
+----
+function configureCyberVault {
+    for($i = 0; $i -lt $DESTINATION_VOLUME_NAMES.Length; $i++) {
+        try {
+            # checking if the volume already exists and is of type snaplock compliance
+            logMessage -message "Checking if SnapLock Compliance volume $($DESTINATION_VOLUME_NAMES[$i]) already exists in vServer $DESTINATION_VSERVER"
+            $volume = Get-NcVol -Vserver $DESTINATION_VSERVER -Volume $DESTINATION_VOLUME_NAMES[$i] | Select-Object -Property Name, State, TotalSize, Aggregate, Vserver, Snaplock | Where-Object { $_.Snaplock.Type -eq "compliance" }
+            if($volume) {
+                $volume
+                logMessage -message "SnapLock Compliance volume $($DESTINATION_VOLUME_NAMES[$i]) already exists in vServer $DESTINATION_VSERVER" -type "SUCCESS"
+            } else {
+                # Create SnapLock Compliance volume
+                logMessage -message "Creating SnapLock Compliance volume: $($DESTINATION_VOLUME_NAMES[$i])"
+                New-NcVol -Name $DESTINATION_VOLUME_NAMES[$i] -Aggregate $DESTINATION_AGGREGATE_NAMES[$i] -SnaplockType Compliance -Type DP -Size $DESTINATION_VOLUME_SIZES[$i] -ErrorAction Stop | Select-Object -Property Name, State, TotalSize, Aggregate, Vserver
+                logMessage -message "Volume $($DESTINATION_VOLUME_NAMES[$i]) created successfully" -type "SUCCESS"
+            }
+
+            # Set SnapLock volume attributes
+            logMessage -message "Setting SnapLock volume attributes for volume: $($DESTINATION_VOLUME_NAMES[$i])"
+            Set-NcSnaplockVolAttr -Volume $DESTINATION_VOLUME_NAMES[$i] -MinimumRetentionPeriod $SNAPLOCK_MIN_RETENTION -MaximumRetentionPeriod $SNAPLOCK_MAX_RETENTION -ErrorAction Stop | Select-Object -Property Type, MinimumRetentionPeriod, MaximumRetentionPeriod
+            logMessage -message "SnapLock volume attributes set successfully for volume: $($DESTINATION_VOLUME_NAMES[$i])" -type "SUCCESS"
+
+            # checking snapmirror relationship
+            logMessage -message "Checking if SnapMirror relationship exists between source volume $($SOURCE_VOLUME_NAMES[$i]) and destination SnapLock Compliance volume $($DESTINATION_VOLUME_NAMES[$i])"
+            $snapmirror = Get-NcSnapmirror | Select-Object SourceCluster, SourceLocation, DestinationCluster, DestinationLocation, Status, MirrorState | Where-Object { $_.SourceCluster -eq $SOURCE_ONTAP_CLUSTER_NAME -and $_.SourceLocation -eq "$($SOURCE_VSERVER):$($SOURCE_VOLUME_NAMES[$i])" -and $_.DestinationCluster -eq $DESTINATION_ONTAP_CLUSTER_NAME -and $_.DestinationLocation -eq "$($DESTINATION_VSERVER):$($DESTINATION_VOLUME_NAMES[$i])" -and ($_.Status -eq "snapmirrored" -or $_.Status -eq "uninitialized") }
+            if($snapmirror) {
+                $snapmirror
+                logMessage -message "SnapMirror relationship already exists for volume: $($DESTINATION_VOLUME_NAMES[$i])" -type "SUCCESS"
+            } else {
+                # Create SnapMirror relationship
+                logMessage -message "Creating SnapMirror relationship for volume: $($DESTINATION_VOLUME_NAMES[$i])"
+                New-NcSnapmirror -SourceCluster $SOURCE_ONTAP_CLUSTER_NAME -SourceVserver $SOURCE_VSERVER -SourceVolume $SOURCE_VOLUME_NAMES[$i] -DestinationCluster $DESTINATION_ONTAP_CLUSTER_NAME -DestinationVserver $DESTINATION_VSERVER -DestinationVolume $DESTINATION_VOLUME_NAMES[$i] -Policy $SNAPMIRROR_PROTECTION_POLICY -Schedule $SNAPMIRROR_SCHEDULE -ErrorAction Stop | Select-Object -Property SourceCluster, SourceLocation, DestinationCluster, DestinationLocation, Status, Policy, Schedule
+                logMessage -message "SnapMirror relationship created successfully for volume: $($DESTINATION_VOLUME_NAMES[$i])" -type "SUCCESS"
+            }
+
+        } catch {
+            handleError -errorMessage $_.Exception.Message
+        }
+    }
+}
+
+----
+. Una vez completados los pasos anteriores, la bóveda cibernética con espacio de aire que utiliza SnapLock Compliance y SnapVault estará lista.
+
+
+Antes de transferir datos de instantáneas a la bóveda cibernética, se debe inicializar la relación SnapVault .  Sin embargo, antes de eso, es necesario realizar un refuerzo de seguridad para proteger la bóveda.

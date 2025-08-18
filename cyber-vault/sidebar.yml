@@ -1,0 +1,40 @@
+---
+section: ontap-cybervault
+title: Protección de datos con la bóveda cibernética de ONTAP
+pdf-filename: Bóveda cibernética de ONTAP
+entries:
+- title: Descripción general de la bóveda cibernética de ONTAP
+  url: "/cyber-vault/ontap-cyber-vault-overview.html"
+- title: Terminología de bóvedas cibernéticas
+  url: "/cyber-vault/ontap-cyber-vault-terminology.html"
+- title: Dimensionamiento de bóvedas cibernéticas para ONTAP
+  url: "/cyber-vault/ontap-cyber-vault-sizing.html"
+- title: Crear una bóveda cibernética
+  url: "/cyber-vault/ontap-create-cyber-vault-task.html"
+- title: Refuerzo de la bóveda cibernética
+  url: "/cyber-vault/ontap-cyber-vault-hardening.html"
+- title: Interoperabilidad de bóvedas cibernéticas
+  url: "/cyber-vault/ontap-cyber-vault-interop.html"
+- title: Preguntas frecuentes sobre Cyber Vault
+  url: "/cyber-vault/ontap-cyber-vault-faq.html"
+- title: Recursos de bóveda cibernética
+  url: "/cyber-vault/ontap-cyber-vault-resources.html"
+- title: Creación, fortalecimiento y validación de una bóveda cibernética de ONTAP
+    con PowerShell
+  entries:
+  - title: Descripción general
+    url: "/cyber-vault/ontap-cyber-vault-ps-overview.html"
+  - title: Creación de bóvedas cibernéticas
+    url: "/cyber-vault/ontap-cyber-vault-ps-creation.html"
+  - title: Refuerzo de la bóveda cibernética
+    url: "/cyber-vault/ontap-cyber-vault-ps-hardening.html"
+  - title: Validación de bóveda cibernética
+    url: "/cyber-vault/ontap-cyber-vault-ps-validation.html"
+  - title: Recuperación de datos de bóvedas cibernéticas
+    url: "/cyber-vault/ontap-cyber-vault-ps-dr.html"
+  - title: Consideraciones adicionales
+    url: "/cyber-vault/ontap-cyber-vault-ps-consider.html"
+  - title: Configurar, analizar, script cron
+    url: "/cyber-vault/ontap-cyber-vault-ps-script.html"
+  - title: Conclusión de la bóveda cibernética
+    url: "/cyber-vault/ontap-cyber-vault-ps-conclusion.html"

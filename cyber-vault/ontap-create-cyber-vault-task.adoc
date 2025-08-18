@@ -1,0 +1,75 @@
+---
+sidebar: sidebar 
+keywords: Cyber vault, cybervault, cyber-vault, data protection, security, ransomware, ONTAP 
+permalink: cyber-vault/ontap-create-cyber-vault-task.html 
+summary: Los pasos incluidos en esta página le ayudarán a crear una solución de bóveda cibernética basada en ONTAP 
+---
+= Creación de una bóveda cibernética con ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Los pasos a continuación le ayudarán a crear una bóveda cibernética con ONTAP.
+
+.Antes de empezar
+* El clúster de origen debe ejecutar ONTAP 9 o posterior.
+* Los agregados de origen y destino deben ser de 64 bits.
+* Los volúmenes de origen y destino se deben crear en clústeres emparejados con SVM emparejados. Para obtener más información, consulte link:https://docs.netapp.com/us-en/ontap/peering/index.html["Peering de clúster"^] .
+* Si el crecimiento automático del volumen está deshabilitado, el espacio libre en el volumen de destino debe ser al menos un cinco por ciento mayor que el espacio utilizado en el volumen de origen.
+
+
+.Acerca de esta tarea
+La siguiente ilustración muestra el procedimiento para inicializar una relación de bóveda de SnapLock Compliance :
+
+image:ontap-cyber-vault-air-gap.png["Ciberbóveda con espacio de aire que utiliza NetApp ONTAP"]
+
+.Pasos
+. Identifique la matriz de destino que se convertirá en la bóveda cibernética para recibir los datos aislados.
+. En la matriz de destino, para preparar la bóveda cibernética,link:https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["instalar la licencia de ONTAP One"^] ,link:https://docs.netapp.com/us-en/ontap/snaplock/initialize-complianceclock-task.html["inicializar el reloj de cumplimiento"^] , y, si está utilizando una versión de ONTAP anterior a 9.10.1,link:https://docs.netapp.com/us-en/ontap/snaplock/create-snaplock-aggregate-task.html["crear un agregado de SnapLock Compliance"^] .
+. En la matriz de destino, cree un volumen de destino de SnapLock Compliance del tipo DP:
++
+`volume create -vserver SVM_name -volume volume_name -aggregate aggregate_name -snaplock-type compliance|enterprise -type DP -size size`
+
+. A partir de ONTAP 9.10.1, los volúmenes SnapLock y no SnapLock pueden existir en el mismo agregado; por lo tanto, ya no es necesario crear un agregado SnapLock separado si está usando ONTAP 9.10.1. Usas el volumen `-snaplock-type` Opción para especificar un tipo de cumplimiento.  En versiones de ONTAP anteriores a ONTAP 9.10.1, el modo SnapLock , Compliance, se hereda del agregado.  No se admiten volúmenes de destino con versiones flexibles. La configuración de idioma del volumen de destino debe coincidir con la configuración de idioma del volumen de origen.
++
+El siguiente comando crea un volumen de SnapLock Compliance de 2 GB llamado `dstvolB` en `SVM2` en el agregado `node01_aggr` :
+
++
+`cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -snaplock-type compliance -type DP -size 2GB`
+
+. En el clúster de destino, para crear el espacio de aire, configure el período de retención predeterminado, como se describe enlink:https://docs.netapp.com/us-en/ontap/snaplock/set-default-retention-period-task.html["Establecer el período de retención predeterminado"^] .  A un volumen SnapLock que es un destino de bóveda se le asigna un período de retención predeterminado.  El valor para este período se establece inicialmente en un mínimo de 0 años y un máximo de 100 años (a partir de ONTAP 9.10.1.  Para versiones anteriores de ONTAP , el valor es 0 - 70) para volúmenes de SnapLock Compliance .  Cada copia de NetApp Snapshot se confirma con este período de retención predeterminado al principio.  Se debe cambiar el período de retención predeterminado.  El período de retención puede extenderse posteriormente, si es necesario, pero nunca acortarse. Para obtener más información, consulte link:https://docs.netapp.com/us-en/ontap/snaplock/set-retention-period-task.html["Descripción general del tiempo de retención establecido"^] .
++
+
+NOTE: Los proveedores de servicios deben considerar las fechas de finalización del contrato del cliente al determinar el período de retención.  Por ejemplo, si el período de retención de la bóveda cibernética es de 30 días y el contrato del cliente finaliza antes de que expire el período de retención, los datos de la bóveda cibernética no se podrán eliminar hasta que expire el período de retención.
+
+. link:https://docs.netapp.com/us-en/ontap/data-protection/create-replication-relationship-task.html["Crear una nueva relación de replicación"^]entre la fuente que no es SnapLock y el nuevo destino SnapLock que creó en el Paso 3.
++
+Este ejemplo crea una nueva relación SnapMirror con el volumen de destino SnapLock dstvolB utilizando una política de XDPDefault para almacenar copias de instantáneas etiquetadas diariamente y semanalmente según un cronograma por hora:
+
++
+`cluster2::> snapmirror create -source-path SVM1:srcvolA -destination-path SVM2:dstvolB -vserver SVM2 -policy XDPDefault -schedule hourly`
+
++
+link:https://docs.netapp.com/us-en/ontap/data-protection/create-custom-replication-policy-concept.html["Crear una política de replicación personalizada"^]o unalink:https://docs.netapp.com/us-en/ontap/data-protection/create-replication-job-schedule-task.html["horario personalizado"^] Si los valores predeterminados disponibles no son adecuados.
+
+. En la SVM de destino, inicialice la relación SnapVault creada en el paso 5:
++
+`snapmirror initialize -destination-path destination_path`
+
+. El siguiente comando inicializa la relación entre el volumen de origen srcvolA en SVM1 y el volumen de destino dstvolB en SVM2:
++
+`cluster2::> snapmirror initialize -destination-path SVM2:dstvolB`
+
+. Una vez inicializada e inactiva la relación, utilice el comando snapshot show en el destino para verificar el tiempo de expiración de SnapLock aplicado a las copias de Snapshot replicadas.
++
+Este ejemplo enumera las copias de instantáneas en el volumen dstvolB que tienen la etiqueta SnapMirror y la fecha de vencimiento de SnapLock :
+
++
+`cluster2::> snapshot show -vserver SVM2 -volume dstvolB -fields snapmirror-label, snaplock-expiry-time`
+
+

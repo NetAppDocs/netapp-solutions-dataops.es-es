@@ -1,0 +1,53 @@
+---
+sidebar: sidebar 
+permalink: xcp/xcp-bp-migration-workflow.html 
+keywords: migration, workflow, nas, shares, copy, sync, truck, azure, expressroute 
+summary: La migración tiene diferentes fases a seguir para una mejor planificación y finalización de la migración.  Para migrar datos desde un almacenamiento NAS de terceros o desde un almacenamiento exportado NAS conectado directamente mediante NetApp XCP, siga las pautas de migración que se proporcionan en esta sección. 
+---
+= Flujo de trabajo de migración
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+La migración tiene diferentes fases a seguir para una mejor planificación y finalización de la migración.  Para migrar datos desde un almacenamiento NAS de terceros o desde un almacenamiento exportado NAS conectado directamente mediante NetApp XCP, siga las pautas de migración que se proporcionan en esta sección.
+
+La siguiente figura ilustra el flujo de trabajo de migración de cualquier NAS a NAS de NetApp .
+
+image:xcp-bp-003.png["Figura que muestra el diálogo de entrada/salida o representa contenido escrito"]
+
+
+
+== En las instalaciones
+
+El flujo de trabajo de migración de cualquier NAS a NetApp NAS incluye los siguientes pasos:
+
+. Descubra los datos y recursos compartidos del NAS.
+. Escanee los datos y genere un informe para encontrar el diseño de los datos.
+. Cree una línea base ejecutando el comando Copiar XCP.  Para migraciones más rápidas, seleccione más instancias XCP y divida la carga de trabajo en el nivel de subcarpeta para iniciar trabajos de migración paralela.
+. Para actualizaciones incrementales, utilice la sincronización XCP hasta que la tasa de cambio sea baja para la ventana de transición.
+. Marque la fuente como de solo lectura para realizar una sincronización final ejecutando el comando de sincronización XCP para completar la migración.
+. Para verificar que los datos se transfirieron correctamente, compare el origen y el destino ejecutando el `xcp verify` dominio.
+
+
+
+
+== Nube
+
+Para la nube, puede seguir un flujo de trabajo de migración local similar si la conectividad entre las instalaciones locales y la nube es conexión directa (AWS), ExpressRoute (Azure) o interconexión en la nube (GCP).
+
+La siguiente figura ilustra el flujo de trabajo de migración desde las instalaciones locales a la nube.
+
+image:xcp-bp-004.png["Figura que muestra el diálogo de entrada/salida o representa contenido escrito"]
+
+Si no hay una conexión directa a Internet entre las instalaciones locales y la nube, debe transferir los datos desde las instalaciones locales a la nube a través de un método de transporte de datos fuera de línea, como un camión.  Cada proveedor de servicios en la nube tiene un método diferente con una terminología distinta para trasladar datos a su centro de datos.
+
+La siguiente figura muestra la solución de transferencia de datos de local a Azure sin ExpressRoute.
+
+image:xcp-bp-005.png["Figura que muestra el diálogo de entrada/salida o representa contenido escrito"]
+
+Puede utilizar una arquitectura similar con los componentes respectivos de los distintos proveedores de servicios en la nube.

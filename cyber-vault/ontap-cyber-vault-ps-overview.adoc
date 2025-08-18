@@ -1,0 +1,91 @@
+---
+sidebar: sidebar 
+permalink: cyber-vault/ontap-cyber-vault-ps-overview.html 
+keywords: Cyber vault, powershell, script, configuration, validation, hardening 
+summary: Esta es la solución NetApp ONTAP para configurar, reforzar y validar una bóveda cibernética basada en ONTAP 
+---
+= Descripción general de la bóveda cibernética de ONTAP con PowerShell
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+En el panorama digital actual, proteger los activos de datos críticos de una organización no es solo una buena práctica: es un imperativo comercial.  Las amenazas cibernéticas están evolucionando a un ritmo sin precedentes y las medidas tradicionales de protección de datos ya no son suficientes para mantener segura la información confidencial.  Ahí es donde entra en juego una bóveda cibernética. La solución de vanguardia basada en ONTAP de NetApp combina técnicas avanzadas de separación de aire con sólidas medidas de protección de datos para crear una barrera impenetrable contra las amenazas cibernéticas.  Al aislar los datos más valiosos con tecnología de refuerzo seguro, una bóveda cibernética minimiza la superficie de ataque para que los datos más críticos permanezcan confidenciales, intactos y fácilmente disponibles cuando sea necesario.
+
+Una bóveda cibernética es una instalación de almacenamiento segura que consta de múltiples capas de protección, como firewalls, redes y almacenamiento.  Estos componentes protegen datos de recuperación vitales necesarios para operaciones comerciales cruciales.  Los componentes de la bóveda cibernética se sincronizan periódicamente con los datos de producción esenciales según la política de la bóveda, pero de lo contrario permanecen inaccesibles.  Esta configuración aislada y desconectada garantiza que, en caso de un ciberataque que comprometa el entorno de producción, se pueda realizar fácilmente una recuperación final y confiable desde la bóveda cibernética.
+
+NetApp permite la creación sencilla de un espacio de aire para la bóveda cibernética configurando la red, deshabilitando LIF, actualizando las reglas del firewall y aislando el sistema de redes externas e Internet.  Este enfoque robusto desconecta eficazmente el sistema de las redes externas e Internet, brindando una protección incomparable contra ataques cibernéticos remotos e intentos de acceso no autorizado, haciendo que el sistema sea inmune a las amenazas e intrusiones basadas en la red.
+
+Al combinar esto con la protección de SnapLock Compliance , los datos no se pueden modificar ni eliminar, ni siquiera por los administradores de ONTAP o el soporte de NetApp .  SnapLock se audita periódicamente de acuerdo con las regulaciones de la SEC y FINRA, lo que garantiza que la resiliencia de los datos cumpla con estas estrictas regulaciones WORM y de retención de datos de la industria bancaria.  NetApp es el único almacenamiento empresarial validado por NSA CSfC para almacenar datos de alto secreto.
+
+image:ontap-cyber-vault-logical-air-gap.png["Bóveda cibernética ONTAP con espacio de aire y copias SnapLock inmutables e indelebles"]
+
+Este documento describe la configuración automatizada de la bóveda cibernética de NetApp para el almacenamiento ONTAP local a otro almacenamiento ONTAP designado con instantáneas inmutables, lo que agrega una capa adicional de protección contra los crecientes ataques cibernéticos para una recuperación rápida.  Como parte de esta arquitectura, toda la configuración se aplica según las mejores prácticas de ONTAP .  La última sección tiene instrucciones para realizar una recuperación en caso de un ataque.
+
+
+NOTE: La misma solución se puede aplicar para crear la bóveda cibernética designada en AWS usando FSx ONTAP.
+
+
+
+== Pasos de alto nivel para crear una bóveda cibernética ONTAP
+
+* Crear una relación de peering
++
+** El sitio de producción que utiliza el almacenamiento ONTAP está conectado a una bóveda cibernética designada con el almacenamiento ONTAP
+
+
+* Crear volumen de SnapLock Compliance
+* Configurar la relación y la regla de SnapMirror para establecer la etiqueta
++
+** Se configuran la relación SnapMirror y los horarios adecuados
+
+
+* Establecer retenciones antes de iniciar la transferencia de SnapMirror (bóveda)
++
+** Se aplica un bloqueo de retención a los datos copiados, lo que evita además que cualquier persona interna pueda acceder a ellos o que se produzcan fallos en los datos.  Con esto, los datos no se pueden eliminar antes de que expire el período de retención.
+** Las organizaciones pueden conservar estos datos durante algunas semanas o meses según sus requisitos.
+
+
+* Inicializar la relación SnapMirror en función de las etiquetas
++
+** La siembra inicial y la transferencia incremental permanente se realizan según el cronograma de SnapMirror
+** Los datos están protegidos (son inmutables e indelebles) con la conformidad con SnapLock y están disponibles para su recuperación.
+
+
+* Implementar controles estrictos de transferencia de datos
++
+** La bóveda cibernética se desbloquea por un período limitado con datos del sitio de producción y se sincroniza con los datos de la bóveda.  Una vez completada la transferencia, la conexión se desconecta, se cierra y se bloquea nuevamente.
+
+
+* Recuperación rápida
++
+** Si el sistema primario se ve afectado en el sitio de producción, los datos de la bóveda cibernética se recuperan de forma segura en la producción original o en otro entorno elegido.
+
+
+
+
+image:ontap-cyber-vault-air-gap.png["Pasos de alto nivel para crear una bóveda cibernética ONTAP"]
+
+
+
+== Componentes de la solución
+
+NetApp ONTAP ejecutando 9.15.1 en clústeres de origen y destino.
+
+ONTAP One: la licencia todo en uno de NetApp ONTAP.
+
+Capacidades utilizadas de la licencia ONTAP One:
+
+* SnapLock Compliance
+* SnapMirror
+* Verificación multiadministrador
+* Todas las capacidades de endurecimiento expuestas por ONTAP
+* Credenciales RBAC independientes para la bóveda cibernética
+
+
+
+NOTE: Todas las matrices físicas unificadas de ONTAP se pueden usar para una bóveda cibernética, sin embargo, los sistemas flash basados en capacidad de la serie C de AFF y los sistemas flash híbridos FAS son las plataformas ideales más rentables para este propósito.  Por favor consulte ellink:ontap-cyber-vault-sizing.html["Dimensionamiento de la bóveda cibernética de ONTAP"] para orientación sobre el tamaño.

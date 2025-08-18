@@ -1,0 +1,22 @@
+---
+sidebar: sidebar 
+permalink: cyber-vault/ontap-cyber-vault-ps-conclusion.html 
+keywords: Cyber vault, powershell, script, configuration, validation, hardening 
+summary: Esta es la solución NetApp ONTAP para configurar, reforzar y validar una bóveda cibernética basada en ONTAP 
+---
+= Conclusión de la solución PowerShell de bóveda cibernética de ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Al aprovechar la separación de aire con metodologías de refuerzo robustas proporcionadas por ONTAP, NetApp le permite crear un entorno de almacenamiento aislado y seguro que es resistente a las amenazas cibernéticas en evolución.  Todo esto se logra manteniendo la agilidad y la eficiencia de la infraestructura de almacenamiento existente.  Este acceso seguro permite a las empresas alcanzar sus estrictos objetivos de seguridad y tiempo de funcionamiento con cambios mínimos en su marco de personal, procesos y tecnología existentes.
+
+La bóveda cibernética de ONTAP utiliza funciones nativas de ONTAP y constituye un enfoque sencillo para brindar protección adicional y crear copias inmutables e indelebles de sus datos.  La incorporación de la bóveda cibernética basada en ONTAP de NetApp a la postura de seguridad general permitirá lo siguiente:
+
+* Cree un entorno que esté separado y desconectado de las redes de producción y de respaldo y restrinja el acceso de los usuarios a él.
+

@@ -1,0 +1,37 @@
+---
+sidebar: sidebar 
+keywords: Cyber vault, cybervault, cyber-vault, data protection, security, ransomware, ONTAP, hardening 
+permalink: cyber-vault/ontap-cyber-vault-terminology.html 
+summary: Bóveda cibernética con terminología ONTAP 
+---
+= Terminología de Cyber Vault ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Éstos son los términos comúnmente utilizados en las arquitecturas de bóvedas cibernéticas.
+
+*Protección autónoma contra ransomware (ARP)*: la función de protección autónoma contra ransomware (ARP) utiliza el análisis de la carga de trabajo en entornos NAS (NFS y SMB) para detectar y advertir de forma proactiva y en tiempo real sobre actividad anormal que podría indicar un ataque de ransomware.  Cuando se sospecha de un ataque, ARP también crea nuevas copias de Snapshot, además de la protección existente contra copias de Snapshot programadas.  Para obtener más información, consulte lalink:https://docs.netapp.com/us-en/ontap/anti-ransomware/index.html["Documentación de ONTAP sobre la protección autónoma contra ransomware"^]
+
+*Espacio de aire (lógico)*: puede configurar el almacenamiento de NetApp con ONTAP como una bóveda cibernética lógica con espacio de aire aprovechandolink:https://docs.netapp.com/us-en/ontap/snaplock/commit-snapshot-copies-worm-concept.html["SnapLock Compliance para proteger copias de instantáneas con WORM"^]
+
+*Espacio de aire (físico)*: un sistema con espacio de aire físico no tiene conectividad de red.  Al utilizar copias de seguridad en cinta, puede mover las imágenes a otra ubicación.  El espacio de aire lógico de SnapLock Compliance es tan robusto como un sistema con espacio de aire físico.
+
+*Host bastión*: una computadora dedicada en una red aislada, configurada para resistir ataques.
+
+*Copias instantáneas inmutables*: copias instantáneas que no se pueden modificar, sin excepción (incluida una organización de soporte o la capacidad de formatear a bajo nivel el sistema de almacenamiento).
+
+*Copias instantáneas indelebles*: copias instantáneas que no se pueden eliminar, sin excepción (incluida una organización de soporte o la capacidad de formatear a bajo nivel el sistema de almacenamiento).
+
+*Copias instantáneas a prueba de manipulaciones*: las copias instantáneas a prueba de manipulaciones utilizan la función de reloj de SnapLock Compliance para bloquear las copias instantáneas durante un período específico.  Ningún usuario ni el soporte de NetApp pueden eliminar estas instantáneas bloqueadas.  Puede utilizar copias de instantáneas bloqueadas para recuperar datos si un volumen se ve comprometido por un ataque de ransomware, malware, pirata informático, administrador deshonesto o eliminación accidental.  Para obtener más información, consulte lalink:https://docs.netapp.com/us-en/ontap/snaplock/snapshot-lock-concept.html["Documentación de ONTAP sobre copias instantáneas a prueba de manipulaciones"^]
+
+* SnapLock* - SnapLock es una solución de cumplimiento de alto rendimiento para organizaciones que utilizan almacenamiento WORM para conservar archivos sin modificaciones con fines regulatorios y de gobernanza. Para obtener más información, consulte link:https://docs.netapp.com/us-en/ontap/snaplock/["Documentación de ONTAP sobre SnapLock"^] .
+
+* SnapMirror* - SnapMirror es una tecnología de replicación de recuperación ante desastres, diseñada para replicar datos de manera eficiente.  SnapMirror puede crear un espejo (o copia exacta de los datos), una bóveda (una copia de los datos con una retención de copia Snapshot más prolongada) o ambos en un sistema secundario, en las instalaciones o en la nube.  Estas copias se pueden usar para muchos propósitos diferentes, como en caso de desastre, enviarlas a la nube o como bóveda cibernética (cuando se utiliza la política de bóveda y se bloquea la bóveda).  Para obtener más información, consulte lalink:https://docs.netapp.com/us-en/ontap/concepts/snapmirror-disaster-recovery-data-transfer-concept.html["Documentación de ONTAP sobre SnapMirror"^]
+
+* SnapVault* - En ONTAP 9.3, SnapVault quedó obsoleto y se optó por configurar SnapMirror mediante la política de bóveda o bóveda espejo.  Este término, aunque todavía se utiliza, también ha caído en desuso. Para obtener más información, consulte link:https://docs.netapp.com/us-en/ontap/concepts/snapvault-archiving-concept.html["Documentación de ONTAP sobre SnapVault"^] .

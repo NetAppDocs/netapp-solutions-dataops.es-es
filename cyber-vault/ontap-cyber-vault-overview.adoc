@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+keywords: Cyber vault, cybervault, cyber-vault, data protection, security, ransomware, ONTAP 
+permalink: cyber-vault/ontap-cyber-vault-overview.html 
+summary: Esta es una descripción general de la solución de bóveda cibernética NetApp ONTAP , impulsada por SnapLock Compliance para una retención de datos inmutable e indeleble. 
+---
+= Descripción general de la bóveda cibernética de ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+La principal amenaza que impulsa la implementación de una bóveda cibernética es la creciente prevalencia y la creciente sofisticación de los ciberataques, en particular el ransomware y las violaciones de datos. link:https://www.verizon.com/business/resources/reports/dbir/["Con el aumento del phishing"^] y métodos cada vez más sofisticados de robo de credenciales; las credenciales utilizadas para iniciar un ataque de ransomware podrían luego usarse para acceder a sistemas de infraestructura.  En estos casos, incluso los sistemas de infraestructura más reforzados corren el riesgo de sufrir ataques.  La única defensa contra un sistema comprometido es tener sus datos protegidos y aislados en una bóveda cibernética.
+
+La bóveda cibernética basada en ONTAP de NetApp ofrece a las organizaciones una solución integral y flexible para proteger sus activos de datos más críticos.  Al aprovechar la separación de aire lógica con metodologías de refuerzo robustas, ONTAP le permite crear entornos de almacenamiento seguros y aislados que son resistentes a las amenazas cibernéticas en evolución.  Con ONTAP, puede garantizar la confidencialidad, integridad y disponibilidad de sus datos manteniendo la agilidad y eficiencia de su infraestructura de almacenamiento.
+
+
+NOTE: A partir de julio de 2024, el contenido de los informes técnicos publicados anteriormente en formato PDF se integrará con la documentación del producto ONTAP .  Además, los nuevos informes técnicos (TR) como este documento ya no recibirán números de TR.
+
+
+
+== ¿Qué es una bóveda cibernética?
+
+Una bóveda cibernética es una técnica específica de protección de datos que implica almacenar datos críticos en un entorno aislado, separado de la infraestructura de TI principal.
+
+Repositorio de datos "air-gapped", *inmutable* e *indeleble* que es inmune a las amenazas que afectan a la red principal, como malware, ransomware o incluso amenazas internas.  Es posible crear una bóveda cibernética con instantáneas *inmutables* e *indelebles*.
+
+Las copias de seguridad con espacio de aire que utilizan métodos tradicionales implican la creación de espacio y la separación física de los medios primarios y secundarios.  Al trasladar los medios fuera del sitio y/o cortar la conectividad, los actores maliciosos no tienen acceso a los datos.  Esto protege los datos pero puede generar tiempos de recuperación más lentos.
+
+
+
+== El enfoque de NetApp para la bóveda cibernética
+
+Las características clave de la arquitectura de referencia de NetApp para una bóveda cibernética incluyen:
+
+* Infraestructura de almacenamiento segura y aislada (por ejemplo, sistemas de almacenamiento con espacio de aire)
+* Las copias de los datos deben ser *inmutables* e *indelebles* sin excepción
+* Controles de acceso estrictos y autenticación multifactor
+* Capacidades de restauración rápida de datos
+
+
+Puede utilizar el almacenamiento de NetApp con ONTAP como una bóveda cibernética aislada aprovechandolink:https://docs.netapp.com/us-en/ontap/snaplock/commit-snapshot-copies-worm-concept.html["SnapLock Compliance para proteger copias de instantáneas con WORM"^] .  Puede realizar todas las tareas básicas de SnapLock Compliance en Cyber Vault.  Una vez configurados, los volúmenes de Cyber Vault se protegen automáticamente, lo que elimina la necesidad de confirmar manualmente las copias Snapshot en WORM.  Puede encontrar más información sobre el entrehierro lógico en estelink:https://www.netapp.com/blog/ransomware-protection-snaplock/["blog"^]
+
+SnapLock Compliance se utiliza para cumplir con las regulaciones bancarias y financieras SEC 70-a-4(f), FINRA 4511(c) y CFTC 1.31(c)-(d).  Cohasset Associates ha certificado que cumple con estas regulaciones (informe de auditoría disponible a pedido).  Al utilizar SnapLock Compliance con esta certificación, usted obtiene un mecanismo reforzado para aislar sus datos, en el que confían las instituciones financieras más grandes del mundo para asegurar tanto la retención como la recuperación de registros bancarios.
+
+image:ontap-cyber-vault-logical-air-gap.png["Bóveda cibernética con separación de aire lógica mediante NetApp ONTAP"]

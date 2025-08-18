@@ -1,0 +1,17 @@
+---
+sidebar: sidebar 
+permalink: xcp/xcp-bp-scenarios.html 
+keywords:  
+summary:  
+---
+= Descripción general
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Esta sección describe los escenarios de los clientes y sus arquitecturas.

@@ -1,0 +1,96 @@
+---
+sidebar: sidebar 
+permalink: xcp/xcp-bp-netapp-xcp-overview.html 
+keywords: multithread, nas, analytics, directory tree, deletion, delete, prerequisites 
+summary: 'NetApp XCP transfiere datos mediante el uso de múltiples subprocesos y funciones personalizables.  Está diseñado para tres casos de uso principales: movimiento o migración de datos, análisis del sistema de archivos y eliminación rápida del árbol de directorios.' 
+---
+= XCP de NetApp
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetApp XCP transfiere datos mediante el uso de múltiples subprocesos y funciones personalizables.  Está diseñado para tres casos de uso principales: movimiento o migración de datos, análisis del sistema de archivos y eliminación rápida del árbol de directorios.
+
+
+
+== Movimiento o migración de datos
+
+NetApp XCP transfiere datos desde cualquier NAS a NetApp NAS.  Este proceso consta de cuatro operaciones principales: escanear, copiar, sincronizar y verificar.  Hay algunas características adicionales que ayudan al monitoreo y transferencia de datos:
+
+* *Escanear.*  Proporciona un diseño de alto nivel de datos NAS y MapR/HDFS.
+* *Copiar.*  Realiza una transferencia de datos de línea base.
+* *Sincronizar.*  Realiza la transferencia de datos incrementales.
+* *Verificar.*  Realiza una verificación exhaustiva del objetivo.
+* *Mostrar (opcional).*  Descubre recursos compartidos NAS.
+
+
+La siguiente figura ilustra las operaciones de migración y replicación de datos de XCP.
+
+image:xcp-bp-001.png["Figura que muestra el diálogo de entrada/salida o representa contenido escrito"]
+
+
+
+== Análisis del sistema de archivos
+
+NetApp XCP le permite de forma nativa identificar, examinar y analizar datos no estructurados para mejorar la información, un requisito clave para los clientes empresariales que desean usar esa información para una mejor planificación, para poner en funcionamiento activos digitales de alto valor y para la gobernanza de datos a través de informes y evaluaciones.
+
+Los clientes que manejan datos confidenciales pueden usar NetApp XCP para responder preguntas operativas típicas, como las siguientes:
+
+* ¿Dónde están mis datos?
+* ¿Cuántos datos y qué tipos de archivos tenemos?
+* ¿Qué datos se utilizan activamente y cuántos están inactivos?
+
+
+La siguiente figura ilustra la comunicación de análisis de archivos XCP de NetApp desde la GUI.
+
+image:xcp-bp-002.png["Figura que muestra el diálogo de entrada/salida o representa contenido escrito"]
+
+
+
+== Borrar
+
+Puede resultar un gran desafío para los equipos de almacenamiento y las cargas de trabajo de automatización de diseño electrónico (EDA) limpiar directorios grandes, ya sean datos obsoletos o datos de prueba que deben limpiarse para recuperar espacio de almacenamiento.  XCP proporciona una funcionalidad de eliminación rápida que puede eliminar un árbol de directorios completo.  La función Eliminar XCP de NetApp elimina archivos y carpetas de una ruta NAS determinada.  Puede aprovechar los filtros de coincidencia para eliminar un conjunto específico de archivos y carpetas.  Para una gran cantidad de archivos y carpetas, puede utilizar la opción Forzar, que no requiere confirmación para eliminar.
+
+
+
+== Soporte para migración de código fuente en vivo
+
+La compatibilidad con migración de origen en vivo incluida en XCP 1.7 permite la migración desde un origen de datos que esté en uso activo (actividad de lectura y escritura).  XCP omite los archivos que se utilizan durante el trabajo de migración, como la copia y la sincronización en ejecución, y la información de los archivos omitidos se captura en el registro de XCP.
+
+Esta función admite cambios en el origen pero no en el destino.  Durante la migración, el destino no debe estar activo.  La compatibilidad con migración de origen en vivo solo está disponible para migraciones NFS.
+
+
+NOTE: No se requieren configuraciones especiales para las migraciones de fuentes en vivo.
+
+
+
+== Requisitos previos para XCP
+
+Antes de implementar NetApp XCP, se deben cumplir los siguientes requisitos previos:
+
+. Verifique los puertos NFS utilizados por el servidor NFS ejecutando el siguiente comando:
++
+....
+rpcinfo -p < NAS IP or on-prem nfs data LIF ip >
+....
+. Para acceder a la ubicación donde se ejecutan las operaciones XCP, como instancias locales o en la nube (por ejemplo, instancias de máquinas virtuales [VM] de Azure, AWS o Google), abra los puertos de firewall para los puertos NFS.
+. Verifique que el puerto NFS sea accesible desde el servidor XCP mediante el comando telnet `<on-prem nfs data LIF ip or NAS IP > 2049` .  El puerto predeterminado es 2049.  Si su entorno tiene un puerto diferente, utilice esa IP.
+. Para NFS, verifique que los recursos compartidos sean accesibles desde el servidor XCP mediante el uso de `showmount -e < NAS IP >` dominio.
+. Aumente la cantidad de inodos en el volumen de destino a más que la cantidad de archivos (cantidad de archivos) en los archivos de origen.
+. Descargue la licencia XCP desde https://xcp.netapp.com/license/xcp.xwic["Portal de licencias de NetApp XCP"^] .  
++
+.. Debe tener una cuenta NetApp en mysupport.netapp.com o puede registrarse gratuitamente.
+.. Descargue la licencia y tengala lista.
+
+
+. Cree un recurso compartido NFS local para cada volumen de Azure NetApp o para el servicio de volumen en la nube (nivel de servicio premium) en la nube para el catálogo XCP.
+. Cree un volumen NAS y configure el recurso compartido para el destino de los datos.
+. Para varias instancias de XCP, debe tener uno o más servidores o instancias en la nube para transferir los datos desde múltiples carpetas o archivos de origen al destino.
+. El tamaño máximo de directorio (el valor predeterminado es 308 MB) define la cantidad máxima de archivos (aproximadamente un millón) en una sola carpeta.  Aumente el valor del tamaño máximo de dir para aumentar el número de archivos.  Aumentar el valor tiene un efecto en ciclos de CPU adicionales.
+. En la nube, NetApp recomienda tener ExpressRoute (Azure), Direct Connect (AWS) o Cloud Interconnect (GCP) entre las instalaciones locales y la nube.
+

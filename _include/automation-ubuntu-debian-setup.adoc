@@ -1,0 +1,30 @@
+= 
+:allow-uri-read: 
+
+
+. Requisitos para el nodo de control de Ansible:
++
+.. Una máquina Ubuntu/Debian con los siguientes paquetes instalados:
++
+... Python3
+... Pip3
+... Ansible (versión superior a 2.10.0)
+... Git
+
+
+
+
+
+
+Si tiene una máquina Ubuntu/Debian nueva sin los requisitos anteriores instalados, siga los pasos a continuación para configurar esa máquina como el nodo de control de Ansible:
+
+. Pegue el siguiente contenido en la terminal
++
+[source, cli]
+----
+sudo apt-get -y install python3 >> outputlog.txt
+sudo apt-get -y install python3-pip >> outputlog.txt
+python3 -W ignore -m pip --disable-pip-version-check install ansible >> outputlog.txt
+sudo apt-get -y install git >> outputlog.txt
+----
+

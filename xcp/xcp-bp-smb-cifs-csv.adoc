@@ -1,0 +1,38 @@
+---
+sidebar: sidebar 
+permalink: xcp/xcp-bp-smb-cifs-csv.html 
+keywords: csv, data dump 
+summary: El comando en esta sección vuelca los datos en formato CSV.  Puede sumar la columna de tamaño para obtener el tamaño total de los datos. 
+---
+= Creación de un archivo CSV desde un recurso compartido SMB/CIFS
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+El siguiente comando vuelca los datos en formato CSV.  Puede sumar la columna de tamaño para obtener el tamaño total de los datos.
+
+....
+xcp scan -match "((now-x.atime) / 3600) > 31*day" -fmt "'{}, {}, {}, {}'.format(relpath, name, strftime(x.atime, '%y-%m-%d-%H:%M:%S'), humanize_size(size))" -preserve-atime  >file.csv
+....
+La salida debería verse similar a este ejemplo:
+
+....
+erase\report_av_fp_cdot_crosstab.csvreport_av_fp_cdot_crosstab.csv20-01-29-10:26:2449.6MiB
+....
+Para escanear hasta la profundidad de tres subdirectorios y proporcionar el resultado en orden de clasificación, ejecute el comando `xcp -du` comando y volcar el tamaño en cada nivel de directorio hasta la profundidad de tres subdirectorios.
+
+....
+./xcp  scan -du -depth 3 NFS_Server_IP:/source_vol
+ 
+....
+Para ordenar, descargue la información en un archivo CSV y ordene la información.
+
+....
+xcp scan -match "type == d" -depth 3 -fmt "'{}, {}, {}, {}'.format(name, relpath, size)" NFS_Server_IP:/share > directory_report.csv
+....
+Este es un informe personalizado que utiliza el `-fmt` dominio.  Escanea todos los directorios y vuelca el nombre del directorio, la ruta y el tamaño del directorio en un archivo CSV.  Puede ordenar la columna de tamaño desde la aplicación de hoja de cálculo.

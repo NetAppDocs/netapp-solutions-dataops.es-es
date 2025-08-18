@@ -1,0 +1,29 @@
+---
+sidebar: sidebar 
+permalink: cyber-vault/ontap-cyber-vault-ps-dr.html 
+keywords: Cyber vault, powershell, script, configuration, validation, hardening 
+summary: Esta es la solución NetApp ONTAP para configurar, reforzar y validar una bóveda cibernética basada en ONTAP 
+---
+= Recuperación de datos de bóvedas cibernéticas de ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Si se destruyen datos en el centro de datos de producción, los datos de la bóveda cibernética se pueden recuperar de forma segura en el entorno elegido.  A diferencia de una solución con espacio de aire físico, la bóveda cibernética ONTAP con espacio de aire está construida utilizando funciones nativas de ONTAP como SnapLock Compliance y SnapMirror.  El resultado es un proceso de recuperación rápido y fácil de ejecutar.
+
+En caso de un ataque de ransomware y necesidad de recuperarse de la bóveda cibernética, el proceso de recuperación es simple y fácil, ya que las copias instantáneas alojadas en la bóveda cibernética se utilizan para restaurar los datos cifrados.
+
+image:ontap-cyber-vault-data-recovery.png["Restaurar la relación"]
+
+Si el requisito es proporcionar un método más rápido para volver a poner los datos en línea cuando sea necesario validarlos, aislarlos y analizarlos rápidamente para su recuperación.  Esto se puede lograr fácilmente al usar FlexClone con la opción de tipo snaplock establecida en tipo sin snaplock.
+
+
+NOTE: A partir de ONTAP 9.13.1, restaurar una copia de Snapshot bloqueada en el volumen SnapLock de destino de una relación de bóveda SnapLock se puede restaurar instantáneamente creando un FlexClone con la opción de tipo snaplock establecida en "no snaplock".  Al ejecutar la operación de creación de clonación de volumen, especifique la copia de instantánea como la "instantánea principal".  Más información sobre la creación de un volumen FlexClone con un tipo SnapLocklink:https://docs.netapp.com/us-en/ontap/volumes/create-flexclone-task.html?q=volume+clone["aquí."]
+
+
+NOTE: Practicar procedimientos de recuperación desde la bóveda cibernética garantizará que se establezcan los pasos adecuados para conectarse a la bóveda cibernética y recuperar datos.  Planificar y probar el procedimiento es esencial para cualquier recuperación durante un evento de ciberataque.

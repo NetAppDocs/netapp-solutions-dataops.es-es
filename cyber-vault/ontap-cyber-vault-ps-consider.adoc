@@ -1,0 +1,80 @@
+---
+sidebar: sidebar 
+permalink: cyber-vault/ontap-cyber-vault-ps-consider.html 
+keywords: Cyber vault, powershell, script, configuration, validation, hardening 
+summary: Esta es la solución NetApp ONTAP para configurar, reforzar y validar una bóveda cibernética basada en ONTAP 
+---
+= Consideraciones adicionales
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Existen consideraciones adicionales al diseñar e implementar una bóveda cibernética basada en ONTAP .
+
+
+
+== Consideraciones sobre el tamaño de la capacidad
+
+La cantidad de espacio en disco necesaria para un volumen de destino de bóveda cibernética de ONTAP depende de diversos factores, el más importante de los cuales es la tasa de cambio de los datos en el volumen de origen.  Tanto la programación de copias de seguridad como la programación de instantáneas en el volumen de destino afectan el uso del disco en el volumen de destino, y no es probable que la tasa de cambio en el volumen de origen sea constante.  Es una buena idea proporcionar un buffer de capacidad de almacenamiento adicional al que se requiere para acomodar cambios futuros en el comportamiento del usuario final o de la aplicación.
+
+Para dimensionar una relación para 1 mes de retención en ONTAP es necesario calcular los requisitos de almacenamiento en función de varios factores, incluidos el tamaño del conjunto de datos principal, la tasa de cambio de los datos (tasa de cambio diaria) y los ahorros de deduplicación y compresión (si corresponde).
+
+A continuación se muestra el enfoque paso a paso:
+
+El primer paso es conocer el tamaño de los volúmenes de origen que está protegiendo con la bóveda cibernética.  Esta es la cantidad base de datos que se replicarán inicialmente en el destino de la bóveda cibernética.  A continuación, estime la tasa de cambio diaria para el conjunto de datos.  Este es el porcentaje de datos que cambia cada día.  Es fundamental tener una buena comprensión de cuán dinámicos son sus datos.
+
+Por ejemplo:
+
+* Tamaño del conjunto de datos principal = 5 TB
+* Tasa de cambio diaria = 5% (0,05)
+* Eficiencia de deduplicación y compresión = 50% (0,50)
+
+
+Ahora, veamos el cálculo:
+
+* Calcular la tasa de cambio de datos diaria:
++
+`Changed data per day = 5000 * 5% = 250GB`
+
+* Calcular el total de datos modificados durante 30 días:
++
+`Total changed data in 30 days = 250 GB * 30 = 7.5TB`
+
+* Calcular el almacenamiento total requerido:
++
+`TOTAL = 5TB + 7.5TB = 12.5TB`
+
+* Aplicar ahorros de deduplicación y compresión:
++
+`EFFECTIVE = 12.5TB * 50% = 6.25TB`
+
+
+
+*Resumen de las necesidades de almacenamiento*
+
+* Sin eficiencia: se necesitarían *12,5 TB* para almacenar 30 días de datos de la bóveda cibernética.
+* Con un 50% de eficiencia: se requerirían *6,25 TB* de almacenamiento después de la deduplicación y la compresión.
+
+
+
+NOTE: Las copias instantáneas pueden tener un costo adicional debido a los metadatos, pero esto suele ser menor.
+
+
+NOTE: Si se realizan varias copias de seguridad por día, ajuste el cálculo según la cantidad de copias instantáneas tomadas cada día.
+
+
+NOTE: Tenga en cuenta el crecimiento de los datos a lo largo del tiempo para garantizar que el tamaño esté preparado para el futuro.
+
+
+
+== Impacto en el rendimiento de la fuente primaria
+
+Dado que la transferencia de datos es una operación de extracción, el impacto en el rendimiento del almacenamiento primario puede variar según la carga de trabajo, el volumen de datos y la frecuencia de las copias de seguridad.  Sin embargo, el impacto general en el rendimiento del sistema principal es generalmente moderado y manejable, ya que la transferencia de datos está diseñada para descargar las tareas de protección de datos y de respaldo al sistema de almacenamiento de la bóveda cibernética.  Durante la configuración inicial de la relación y la primera copia de seguridad completa, se transfiere una cantidad significativa de datos del sistema principal al sistema de bóveda cibernética (el volumen SnapLock Compliance ).  Esto puede generar un mayor tráfico de red y carga de E/S en el sistema principal.  Una vez que se completa la copia de seguridad completa inicial, ONTAP solo necesita rastrear y transferir los bloques que han cambiado desde la última copia de seguridad.  Esto da como resultado una carga de E/S mucho menor en comparación con la replicación inicial.  Las actualizaciones incrementales son eficientes y tienen un impacto mínimo en el rendimiento del almacenamiento principal.  El proceso de bóveda se ejecuta en segundo plano, lo que reduce las posibilidades de interferencia con las cargas de trabajo de producción del sistema principal.
+
+* Asegurarse de que el sistema de almacenamiento tenga suficientes recursos (CPU, memoria y IOP) para manejar la carga adicional mitiga el impacto en el rendimiento.
+

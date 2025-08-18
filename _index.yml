@@ -1,0 +1,32 @@
+---
+indexpage:
+  title: Soluciones de gestión de datos de NetApp
+  summary: Las soluciones de NetApp son un conjunto de capacidades estratégicas y
+    tecnológicas que enfatizan la cartera de productos y servicios de NetApp para
+    respaldar las necesidades comerciales más críticas de nuestros clientes.
+  lead: Las soluciones de NetApp son un conjunto de capacidades estratégicas y tecnológicas
+    que enfatizan la cartera de productos y servicios de NetApp para respaldar las
+    necesidades comerciales más críticas de nuestros clientes.
+  tiles:
+  - title: Empezar
+    links:
+    - title: Qué hay de nuevo
+      url: "/whats-new.html"
+  - title: Migración de datos y protección de datos
+    links:
+    - title: Proteja los datos con una bóveda cibernética
+      url: "/cyber-vault/ontap-cyber-vault-overview.html"
+    - title: Migrar datos con NetApp XCP
+      url: "/xcp/xcp-bp-introduction.html"
+  - title: Automatización de soluciones
+    links:
+    - title: Introducción
+      url: "/automation/automation-introduction.html"
+  - title: Solicitudes de soluciones y comentarios
+    links:
+    - title: Automatización de solicitudes
+      url: https://github.com/NetAppDocs/netapp-solutions/issues/new?body=[Request%20Automation]%0d%0a%0d%0aSolution%20Name:%20%0d%0aRequest%20Title:%20%0d%0aDescription:%0d%0aSuggestions:&title=Request%20Automation%20-%20%3Crequest_title%3E
+    - title: Proponer una nueva solución
+      url: https://github.com/NetAppDocs/netapp-solutions/issues/new?body=[Request%20Solution]%0d%0a%0d%0aSolution%20Use%20Case:%20%0d%0aSolution%20Description:%20%0d%0aAdditional%20Comments:&title=Request%20Solution%20-%20%3Csolution%3E
+    - title: Proporcionar retroalimentación sobre la solución
+      url: https://github.com/NetAppDocs/netapp-solutions/issues/new?body=[Solution%20Feedback]%0d%0a%0d%0aSolution%20Name:%20%0d%0aSolution%20Feedback:%20%0d%0aAdditional%20Comments:&title=Solution%20Feedback%20-%20%3Csolution%3E

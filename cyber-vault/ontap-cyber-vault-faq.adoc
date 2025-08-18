@@ -1,0 +1,154 @@
+---
+sidebar: sidebar 
+keywords: Cyber vault, cybervault, cyber-vault, data protection, security, ransomware, ONTAP, FAQ 
+permalink: cyber-vault/ontap-cyber-vault-faq.html 
+summary: Este documento contiene las preguntas frecuentes sobre la solución de bóveda cibernética NetApp ONTAP . 
+---
+= Preguntas frecuentes sobre Cyber Vault
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Estas preguntas frecuentes están dirigidas a los clientes y socios de NetApp .  Responde preguntas frecuentes sobre la arquitectura de referencia de bóveda cibernética basada en ONTAP de NetApp.
+
+
+
+== ¿Qué es una bóveda cibernética de NetApp ?
+
+La bóveda cibernética es una técnica específica de protección de datos que implica almacenar datos en un entorno aislado, separado de la infraestructura de TI principal.
+
+Cyber Vault es un repositorio de datos "aislado", inmutable e indeleble que es inmune a las amenazas que afectan a los datos primarios, como malware, ransomware o amenazas internas.  Se puede lograr una bóveda cibernética con copias Snapshot inmutables de NetApp ONTAP y hacerla indeleble con NetApp SnapLock Compliance.  Mientras está bajo la protección de SnapLock Compliance , los datos no se pueden modificar ni eliminar, ni siquiera por los administradores de ONTAP o el soporte de NetApp .
+
+Las copias de seguridad con espacio de aire que utilizan métodos tradicionales implican la creación de espacio y la separación física de los medios primarios y secundarios.  La separación de aire con una bóveda cibernética incluye el uso de una red de replicación de datos separada fuera de las redes de acceso a datos estándar para replicar copias instantáneas en un destino indeleble.
+
+Otros pasos más allá de las redes con espacio de aire implican deshabilitar todos los protocolos de acceso y replicación de datos en la bóveda cibernética cuando no sean necesarios.  Esto evita el acceso a los datos o la exfiltración de datos en el sitio de destino.  Con SnapLock Compliance, no se requiere separación física.  SnapLock Compliance protege sus copias Snapshot almacenadas, en un punto en el tiempo y de solo lectura, lo que da como resultado una recuperación rápida de datos que es segura contra la eliminación y es inmutable.
+
+
+
+== El enfoque de NetApp para la bóveda cibernética
+
+La bóveda cibernética de NetApp , impulsada por SnapLock, proporciona a las organizaciones una solución integral y flexible para proteger sus activos de datos más críticos.  Al aprovechar las tecnologías de refuerzo en ONTAP, NetApp le permite crear una bóveda cibernética aislada, segura y con espacio de aire que es inmune a las amenazas cibernéticas en evolución.  Con NetApp, puede garantizar la confidencialidad, integridad y disponibilidad de sus datos manteniendo la agilidad y la eficiencia de su infraestructura de almacenamiento.
+
+Las características clave de la arquitectura de referencia de NetApp para una bóveda cibernética incluyen:
+
+* Infraestructura de almacenamiento segura y aislada (por ejemplo, sistemas de almacenamiento con espacio de aire)
+* Las copias de seguridad de sus datos son inmutables e indelebles
+* Controles de acceso estrictos y separados, verificación de múltiples administradores y autenticación multifactor
+* Capacidades de restauración rápida de datos
+
+
+
+
+== Preguntas frecuentes sobre Cyber Vault
+
+.¿Cyber Vault es un producto de NetApp?
+[%collapsible%open]
+====
+No, "bóveda cibernética" es un término que se utiliza ampliamente en la industria.  NetApp ha creado una arquitectura de referencia para que a los clientes les resulte fácil construir sus propias bóvedas cibernéticas y aprovechar las docenas de funciones de seguridad de ONTAP para proteger sus datos de las amenazas cibernéticas.  Hay más información disponible enlink:https://docs.netapp.com/us-en/netapp-solutions/cyber-vault/ontap-cyber-vault-overview.html["Sitio de documentación de ONTAP"^] .
+
+====
+.¿Cyber Vault con NetApp es simplemente otro nombre para LockVault o SnapVault?
+[%collapsible%open]
+====
+LockVault era una característica de Data ONTAP 7-mode que no está disponible en las versiones actuales de ONTAP.
+
+SnapVault era un término heredado para lo que ahora se logra con la política de bóveda de SnapMirror.  Esta política permite que el destino conserve una cantidad diferente de copias de instantáneas que el volumen de origen.
+
+Cyber Vault utiliza SnapMirror con la política de bóveda y SnapLock Compliance juntos para crear una copia inmutable e indeleble de los datos.
+
+====
+.¿Qué hardware de NetApp puedo usar para una bóveda cibernética, FAS, flash de capacidad o flash de rendimiento?
+[%collapsible%open]
+====
+Esta arquitectura de referencia para bóveda cibernética se aplica a todo el portafolio de hardware de ONTAP .  Los clientes pueden utilizar las plataformas AFF A-Series, AFF C-Series o FAS como bóveda.  Las plataformas basadas en Flash proporcionarán los tiempos de recuperación más rápidos, mientras que las plataformas basadas en disco proporcionarán la solución más rentable.  Dependiendo de la cantidad de datos que se estén recuperando y si se están realizando múltiples recuperaciones en paralelo, el uso de sistemas basados en discos (FAS) puede demorar días o semanas en completarse.  Consulte con un representante de NetApp o un socio para dimensionar adecuadamente una solución de bóveda cibernética para satisfacer los requisitos comerciales.
+
+====
+.¿Puedo utilizar Cloud Volumes ONTAP como fuente de bóveda cibernética?
+[%collapsible%open]
+====
+Sí, sin embargo, el uso de CVO como fuente requiere que los datos se repliquen en un destino de bóveda cibernética local, ya que la SnapLock Compliance es un requisito para una bóveda cibernética ONTAP .  La replicación de datos desde una instancia CVO basada en hiperescalador puede generar cargos de salida.
+
+====
+.¿Puedo utilizar Cloud Volumes ONTAP como destino de bóveda cibernética?
+[%collapsible%open]
+====
+La arquitectura de Cyber Vault se basa en la indelebilidad de SnapLock Compliance de ONTAP y está diseñada para implementaciones locales.  Se están investigando arquitecturas de Cyber Vault basadas en la nube para su futura publicación.
+
+====
+.¿Puedo utilizar ONTAP Select como fuente de bóveda cibernética?
+[%collapsible%open]
+====
+Sí, ONTAP Select se puede utilizar como fuente para un destino de bóveda cibernética basada en hardware local.
+
+====
+.¿Puedo utilizar ONTAP Select como destino de bóveda cibernética?
+[%collapsible%open]
+====
+No, ONTAP Select no debe usarse como destino de bóveda cibernética ya que no tiene la capacidad de usar SnapLock Compliance.
+
+====
+.¿Una bóveda cibernética con NetApp solo utiliza SnapMirror?
+[%collapsible%open]
+====
+No, una arquitectura de bóveda cibernética de NetApp aprovecha muchas características de ONTAP para crear una copia de datos segura, aislada, protegida y reforzada.  Para obtener más información sobre qué técnica adicional se puede utilizar consulte la siguiente pregunta.
+
+====
+.¿Existe alguna otra tecnología o configuración utilizada para la bóveda cibernética?
+[%collapsible%open]
+====
+La base de una bóveda cibernética de NetApp es SnapMirror y SnapLock Compliance, pero el uso de funciones ONTAP adicionales como copias Snapshot a prueba de manipulaciones, autenticación multifactor (MFA), verificación de múltiples administradores, control de acceso basado en roles y registro de auditoría local y remoto mejora la seguridad de los datos.
+
+====
+.¿Qué hace que las copias instantáneas de ONTAP sean mejores que otras para una bóveda cibernética?
+[%collapsible%open]
+====
+Las copias instantáneas de ONTAP son inmutables de manera predeterminada y pueden hacerse indelebles con SnapLock Compliance.  Ni siquiera el soporte de NetApp puede eliminar las copias de SnapLock Snapshot.  La mejor pregunta que podemos hacer es qué hace que la bóveda cibernética de NetApp sea mejor que otras bóvedas cibernéticas de la industria.  En primer lugar, ONTAP es el almacenamiento más seguro del planeta y ha obtenido la validación CSfC, que permite el almacenamiento de datos secretos y de alto secreto en reposo tanto en la capa de hardware como en la de software.  Más información sobrelink:https://www.netapp.com/esg/trust-center/compliance/CSfC-Program/["El CSfC se puede encontrar aquí"^] .  Además, ONTAP puede tener un espacio de aire en la capa de almacenamiento, y el sistema de bóveda cibernética puede controlar la replicación, lo que permite crear un espacio de aire dentro de la red de bóveda cibernética.
+
+====
+.¿Puede un volumen de una bóveda cibernética utilizar ONTAP Fabric Pool?
+[%collapsible%open]
+====
+No, un volumen de bóveda cibernética (destino SnapMirror de SnapLock Compliance ) no se puede organizar en niveles mediante Fabric Pool, independientemente de la política.
+
+image:ontap-cyber-vault-fabric-pool-configurations.png["Configuraciones compatibles con Cyber Vault Fabric Pool"]
+
+
+NOTE: Existen múltiples escenarios en los que el pool de fabric *no* puede usarse con una bóveda cibernética.
+
+. Los niveles fríos de Fabric Pool *no pueden* usar un clúster de bóveda cibernética.  Esto se debe a que habilitar el protocolo S3 invalida la naturaleza segura de la arquitectura de referencia de la bóveda cibernética.  Además, el bucket S3 utilizado para el pool de Fabric no se puede proteger.
+. Los volúmenes de SnapLock Compliance en la bóveda cibernética *no pueden* organizarse en niveles en un bucket S3 ya que los datos están bloqueados en el volumen.
+
+
+image:ontap-cyber-vault-fabric-pool-config-p-s-cv.png["Configuraciones compatibles con Cyber Vault Fabric Pool para relaciones en cascada"]
+
+====
+.¿ ONTAP S3 Worm está disponible en una bóveda cibernética?
+[%collapsible%open]
+====
+No, S3 es un protocolo de acceso a datos que invalida la naturaleza segura de la arquitectura de referencia.
+
+====
+.¿ NetApp Cyber Vault se ejecuta en una personalidad o perfil de ONTAP diferente?
+[%collapsible%open]
+====
+No, es una arquitectura de referencia.  Los clientes pueden utilizar ellink:ontap-create-cyber-vault-task.html["arquitectura de referencia"] y construir una bóveda cibernética, o puede utilizar ellink:ontap-cyber-vault-ps-overview.html["Scripts de PowerShell para crear, reforzar y validar"] una bóveda cibernética.
+
+====
+.¿Puedo activar protocolos de datos como NFS, SMB y S3 en una bóveda cibernética?
+[%collapsible%open]
+====
+De forma predeterminada, los protocolos de datos deben estar deshabilitados en la bóveda cibernética para que sea segura.  Sin embargo, se pueden habilitar protocolos de datos en la bóveda cibernética para acceder a los datos para su recuperación o cuando sea necesario.  Esto debe hacerse de forma temporal y desactivarse una vez que se haya completado la recuperación.
+
+====
+.¿Es posible convertir un entorno SnapVault existente en una bóveda cibernética o es necesario volver a sembrar todo?
+[%collapsible%open]
+====
+Sí. Se podría tomar un sistema que sea un destino de SnapMirror (con política de bóveda), deshabilitar los protocolos de datos, fortalecer el sistema según la política.link:https://docs.netapp.com/us-en/ontap/ontap-security-hardening/security-hardening-overview.html["Guía de endurecimiento de ONTAP"^] , aislarlo en una ubicación segura y seguir los demás procedimientos de la arquitectura de referencia para convertirlo en una bóveda cibernética sin tener que volver a sembrar el destino.
+
+====
+*¿Tiene preguntas adicionales?*  Envíe un correo electrónico a mailto:ng-cyber-vault@netapp.com[ng-cyber-vault@netapp.com^,Preguntas sobre Cyber Vault,Me gustaría saber más sobre: ] ¡con sus preguntas!  Responderemos y agregaremos sus preguntas a las preguntas frecuentes.

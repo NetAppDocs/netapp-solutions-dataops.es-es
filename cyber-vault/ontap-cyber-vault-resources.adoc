@@ -1,0 +1,29 @@
+---
+sidebar: sidebar 
+keywords: Cyber vault, cybervault, cyber-vault, data protection, security, ransomware, ONTAP 
+permalink: cyber-vault/ontap-cyber-vault-resources.html 
+summary: Recursos adicionales sobre la bóveda cibernética de ONTAP 
+---
+= Recursos de bóveda cibernética
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Para obtener más información sobre la información descrita en esta bóveda cibernética, consulte la siguiente información adicional y conceptos de seguridad.
+
+* link:https://www.netapp.com/pdf.html?item=/media/108397-sb-4289-netapp-cyber-vaulting.pdf["Bóveda cibernética de NetApp : Resumen de soluciones de protección de datos multicapa"^]
+* link:https://www.netapp.com/newsroom/press-releases/news-rel-20240626-477898/["NetApp obtiene la calificación AAA por su primera solución integrada de detección de ransomware basada en IA."^]
+* link:https://www.netapp.com/blog/unified-data-storage-for-the-ai-era/#article3["Aumente la resiliencia cibernética con el almacenamiento más seguro del planeta"^]
+* link:https://docs.netapp.com/us-en/ontap/ontap-security-hardening/security-hardening-overview.html["Guía de refuerzo de seguridad de ONTAP"^]
+* link:https://docs.netapp.com/us-en/ontap/zero-trust/zero-trust-overview.html["Confianza cero de NetApp"^]
+* link:https://www.netapp.com/cyber-resilience/["Ciberresiliencia de NetApp"^]
+* link:https://www.netapp.com/cyber-resilience/data-protection/["Protección de datos de NetApp"^]
+* link:https://docs.netapp.com/us-en/ontap/peering/index.html["Descripción general del emparejamiento de clústeres y SVM con la CLI"^]
+* link:https://docs.netapp.com/us-en/ontap/concepts/snapvault-archiving-concept.html["Archivado de SnapVault"^]
+* link:https://github.com/NetApp/ransomeware-cybervault-automation["Configurar, analizar, script cron"^]
+

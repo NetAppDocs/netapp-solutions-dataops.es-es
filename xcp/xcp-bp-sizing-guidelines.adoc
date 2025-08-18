@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: xcp/xcp-bp-sizing-guidelines.html 
+keywords: test, time estimate, copy, sync, rename, append, delete 
+summary: Esta sección proporciona el tiempo aproximado para realizar las operaciones de copia XCP y sincronización XCP con un tamaño de archivo diferente de un millón de archivos para NFS. 
+---
+= Pautas de tallas
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Esta sección proporciona el tiempo aproximado para realizar las operaciones de copia XCP y sincronización XCP con un tamaño de archivo diferente de un millón de archivos para NFS.
+
+
+
+== Estimación de tiempo basada en pruebas
+
+Las pruebas para las operaciones de copia y sincronización de XCP utilizaron el mismo banco de pruebas que se utilizó para la implementación.  Se crearon un millón de archivos de tres conjuntos de archivos de 8K, 16K y 1MB y los cambios se realizaron en tiempo real.  La función de sincronización XCP realizó las actualizaciones incrementales diferenciales desde el origen al destino a nivel de archivo.  La operación de actualización incremental es una o más de estas cuatro operaciones: renombrar archivos y carpetas existentes, agregar datos a archivos existentes, eliminar archivos y carpetas e incluir enlaces físicos, blandos y múltiples adicionales.  Para fines de prueba, nos centramos en las operaciones de renombrar, agregar, eliminar y vincular.  En otras palabras, las operaciones de modificación como renombrar, agregar y eliminar se realizaron a una tasa de cambio del 10% al 90% en un millón de archivos.
+
+La siguiente figura muestra los resultados de la operación de copia XCP.
+
+image:xcp-bp-010.png["Figura que muestra el diálogo de entrada/salida o representa contenido escrito"]
+
+La siguiente figura muestra los resultados de las operaciones de cambio de nombre y vínculo de XCP Sync.
+
+image:xcp-bp-008.png["Figura que muestra el diálogo de entrada/salida o representa contenido escrito"]
+
+El tamaño del archivo no es proposicional para el `xcp sync` tiempo de finalización de la transferencia de los archivos de origen renombrados; los gráficos son lineales.
+
+Los tipos de enlaces son enlaces blandos, enlaces duros y enlaces múltiples.  Los enlaces blandos se consideran archivos normales.  El tamaño de los archivos no es relevante para el tiempo necesario para completar la operación de sincronización XCP.
+
+Las siguientes figuras muestran los resultados de las operaciones de anexar y eliminar sincronización XCP.
+
+image:xcp-bp-009.png["Figura que muestra el diálogo de entrada/salida o representa contenido escrito"]
+
+Para las operaciones de agregar y eliminar, los archivos de gran tamaño toman más tiempo en comparación con los archivos de tamaño pequeño.  El tiempo para completar la operación es lineal al porcentaje de cambios agregados y eliminados.
+
+
+
+== Comparación de XCP 1.6.1 con XCP 1.5
+
+En comparación con las versiones anteriores, XCP 1.6.3 y 1.7 ofrecen un rendimiento mejorado.  La siguiente sección muestra una comparación del rendimiento de sincronización entre XCP 1.6.3 y 1.7 para tamaños de 8K, 16K y 1MB de un millón de archivos.
+
+Las siguientes figuras muestran los resultados del rendimiento de sincronización de XCP para XCP 1.6.3 versus 1.7 (con un tamaño de 8K de un millón de archivos).
+
+image:xcp-bp-011.png["Figura que muestra el diálogo de entrada/salida o representa contenido escrito"]
+
+La siguiente figura muestra los resultados del rendimiento de sincronización de XCP para XCP 1.6.1 versus 1.5 (con un tamaño de 16K de un millón de archivos).
+
+image:xcp-bp-012.png["Figura que muestra el diálogo de entrada/salida o representa contenido escrito"]
+
+La siguiente figura muestra los resultados del rendimiento de sincronización de XCP para XCP 1.6.1 versus 1.5 con un tamaño de 1 MB de un millón de archivos.
+
+image:xcp-bp-013.png["Figura que muestra el diálogo de entrada/salida o representa contenido escrito"]
+
+En promedio, el rendimiento de XCP 1.7 mejoró o fue similar al de XCP 1.6.3 para el `xcp sync` actualización incremental diferencial: operaciones de renombrar, agregar, vincular y eliminar con un tamaño de 1 MB de un millón de archivos.
+
+Basándose en esta validación de rendimiento, NetApp recomienda utilizar XCP 1.7 para la migración de datos locales y en la nube.
