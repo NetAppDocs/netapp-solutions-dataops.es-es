@@ -88,7 +88,7 @@ rpcinfo -p < NAS IP or on-prem nfs data LIF ip >
 .. Descargue la licencia y tengala lista.
 
 
-. Cree un recurso compartido NFS local para cada volumen de Azure NetApp o para el servicio de volumen en la nube (nivel de servicio premium) en la nube para el catálogo XCP.
+. Cree un recurso compartido NFS local para cada volumen de Azure NetApp o para los Google Cloud NetApp Volumes (nivel de servicio premium) en la nube para el catálogo XCP.
 . Cree un volumen NAS y configure el recurso compartido para el destino de los datos.
 . Para varias instancias de XCP, debe tener uno o más servidores o instancias en la nube para transferir los datos desde múltiples carpetas o archivos de origen al destino.
 . El tamaño máximo de directorio (el valor predeterminado es 308 MB) define la cantidad máxima de archivos (aproximadamente un millón) en una sola carpeta.  Aumente el valor del tamaño máximo de dir para aumentar el número de archivos.  Aumentar el valor tiene un efecto en ciclos de CPU adicionales.

@@ -1413,7 +1413,6 @@
   <block id="14324adbfb79ad4b6832f6a02a1275db" category="list-text">Descargue la licencia XCP desde<block ref="eab886d42d2df7a710066e6d9bf6f5f5" category="inline-link-rx"></block> .  </block>
   <block id="7481213bd7173438d06de418474e428b" category="list-text">Debe tener una cuenta NetApp en mysupport.netapp.com o puede registrarse gratuitamente.</block>
   <block id="d25e9f08475ddf6a2701e7cfbd67ff06" category="list-text">Descargue la licencia y tengala lista.</block>
-  <block id="b9611b870758eac97bd0c3bcb3fc8026" category="list-text">Cree un recurso compartido NFS local para cada volumen de Azure NetApp o para el servicio de volumen en la nube (nivel de servicio premium) en la nube para el catálogo XCP.</block>
   <block id="3d19c697861d11cce0f1d78d41cfea64" category="list-text">Cree un volumen NAS y configure el recurso compartido para el destino de los datos.</block>
   <block id="4f2a304b9680876edc7cb61b5c4c7134" category="list-text">Para varias instancias de XCP, debe tener uno o más servidores o instancias en la nube para transferir los datos desde múltiples carpetas o archivos de origen al destino.</block>
   <block id="adc4e34febc2f5919cfa03870630c2fc" category="list-text">El tamaño máximo de directorio (el valor predeterminado es 308 MB) define la cantidad máxima de archivos (aproximadamente un millón) en una sola carpeta.  Aumente el valor del tamaño máximo de dir para aumentar el número de archivos.  Aumentar el valor tiene un efecto en ciclos de CPU adicionales.</block>
@@ -1521,4 +1520,5 @@
   <block id="1eff9302c319abb4fe8a4c919bb75125" category="sidebar">Migración de datos con NetApp XCP</block>
   <block id="acf055fa7efae33ce06471f448ae1267" category="sidebar">Escenarios de clientes</block>
   <block id="c5071cdf8081474104ef1eee5ec6d784" category="sidebar">Migración de datos CIFS con ACL desde un servidor de almacenamiento de origen a ONTAP</block>
+  <block id="212969b8fbef38a460a102c0de1dc0a4" category="list-text">Cree un recurso compartido NFS local para cada volumen de Azure NetApp o para los Google Cloud NetApp Volumes (nivel de servicio premium) en la nube para el catálogo XCP.</block>
 </blocks>
